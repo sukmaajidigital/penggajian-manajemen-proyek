@@ -4,7 +4,7 @@
     @method('PUT')
     @endif
 
-    <section class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+    <section class="p-4 sm:p-8 bg-white shadow rounded-lg">
         <header>
             <h2 class="text-lg font-medium text-gray-900">
                 {{ __('Employees') }}
@@ -55,29 +55,14 @@
         </div>
     </section>
 
-    <section class="p-4 sm:p-8 bg-white shadow sm:rounded-lg fixed bottom-0 left-0 right-0">
-        <div class="flex flex-col md:flex-row flex-wrap gap-4 max-w-7xl m-auto">
-            <div class="flex-1">
-                <x-input-label for="payroll_date" :value="__('Payroll Date')" />
-                <input id="payroll_date" name="payroll_date" value="{{ old('payroll_date', isset($payroll) ? $payroll->payroll_date->format('Y-m-d') : '') }}" type="date" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm mt-1 block w-full" required />
-                <x-input-error :messages="$errors->get('payroll_date')" class="mt-2" />
-            </div>
-            <div class="flex-1 flex justify-end">
-                <button class="inline-flex items-center px-12 py-2 bg-primary-500 border border-transparent rounded-lg font-semibold text-lg text-white tracking-widest focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition ease-in-out duration-150">
-                    {{ isset($payroll) ? 'Update' : 'Save' }}
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <section class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+    <section class="p-4 sm:p-8 bg-white shadow rounded-lg">
         <header>
             <h2 class="text-lg font-medium text-gray-900">
                 {{ __('Summary') }}
             </h2>
         </header>
         <hr class="my-4">
-        <div id="summary-container">
+        <div id="summary-container" class="w-full overflow-x-scroll">
             <table class="min-w-full border divide-y divide-gray-200">
                 <thead>
                     <tr>
@@ -110,7 +95,21 @@
             </div>
         </div>
     </section>
-    <div class="h-[100px]"></div>
+
+    <section class="p-4 sm:p-8 bg-white shadow rounded-lg">
+        <div class="flex flex-col md:flex-row flex-wrap gap-4 max-w-7xl m-auto">
+            <div class="flex-1">
+                <x-input-label for="payroll_date" :value="__('Payroll Date')" />
+                <input id="payroll_date" name="payroll_date" value="{{ old('payroll_date', isset($payroll) ? $payroll->payroll_date->format('Y-m-d') : '') }}" type="date" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm mt-1 block w-full" required />
+                <x-input-error :messages="$errors->get('payroll_date')" class="mt-2" />
+            </div>
+            <div class="flex-1 flex justify-end">
+                <button class="inline-flex items-center px-12 py-2 bg-primary-500 border border-transparent rounded-lg font-semibold text-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition ease-in-out duration-150">
+                    {{ isset($payroll) ? 'Update' : 'Save' }}
+                </button>
+            </div>
+        </div>
+    </section>
 </form>
 
 <script>
@@ -141,8 +140,12 @@
                 const allowances = parseFloat($(`#allowances_${index}`).val()) || 0;
                 const deductions = parseFloat($(`#deductions_${index}`).val()) || 0;
                 const netSalary = basicSalary + allowances - deductions;
+                let rupiah = Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                });
                 total += netSalary;
-                                
+
                 summaryTableBody.append(`
                     <tr class="bg-white">
                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
@@ -152,20 +155,20 @@
                             ${employeeName}
                         </td>
                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            ${basicSalary}
+                            ${rupiah.format(basicSalary)}
                         </td>
                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            ${allowances}
+                            ${rupiah.format(allowances)}
                         </td>
                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            ${deductions}
+                            ${rupiah.format(deductions)}
                         </td>
                         <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                            ${netSalary}
+                            ${rupiah.format(netSalary)}
                         </td>
                     </tr>
                 `);
-                $('#total_take_home_pay').text(`${total}`);
+                $('#total_take_home_pay').text(`${rupiah.format(total)}`);
             });
         }
 

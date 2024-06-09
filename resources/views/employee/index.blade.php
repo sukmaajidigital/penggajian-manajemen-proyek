@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-3xl text-gray-800 leading-tight">
             {{ __('Employee') }}
         </h2>
     </x-slot>
@@ -8,14 +8,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-4 space-y-4">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg py-4 space-y-4">
                 <div class="flex flex-row justify-between px-4">
                     <div></div>
                     <x-primary-button-link href="{{ route('employee.create') }}">
                         {{ __('Add Employee') }}
                     </x-primary-button-link>
                 </div>
-                <div class="min-w-full align-middle">
+                <div class="w-full overflow-x-scroll align-middle">
                     <table class="min-w-full border divide-y divide-gray-200">
                         <thead>
                             <tr>
@@ -67,7 +67,7 @@
                                     {{ $salary }}
                                 </td>
                                 <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                                    Tergaji
+                                    {{ $employee->is_paid_this_month ? 'Paid' : 'Not Paid'}}
                                 </td>
                                 <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                     <x-edit-button href="{{ route('employee.edit', $employee) }}" />
